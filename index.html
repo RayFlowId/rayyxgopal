@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b12"><title>Rayy DevHub — Roblox Asset Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="loginView" class="login-shell">
+  <div class="login-card">
+    <div class="brand-mark">R<span>✦</span></div>
+    <div class="eyebrow">PRIVATE DEVELOPER WORKSPACE</div>
+    <h1>Rayy <span>DevHub</span></h1>
+    <p class="muted">Control panel untuk mengelola aset map Roblox kamu dan tim.</p>
+    <form id="loginForm">
+      <label for="password">Kode akses tim</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan kode akses" required>
+      <button class="primary full" type="submit">Masuk ke workspace <span>↗</span></button>
+      <p id="loginMessage" class="message" aria-live="polite"></p>
+    </form>
+    <div class="login-foot"><span class="status-dot"></span> Private access · Protected by server</div>
+  </div>
+</div>
+<div id="appView" class="app-shell hidden">
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-mark small">R<span>✦</span></span><span>Rayy <b>DevHub</b><small>ROBLOX WORKSPACE</small></span></a>
+    <div class="side-label">WORKSPACE</div>
+    <button class="nav-item active" data-section="overview"><span>◫</span> Overview</button>
+    <button class="nav-item" data-section="assets"><span>▧</span> Asset Library</button>
+    <button class="nav-item" data-section="upload"><span>↑</span> Upload Asset</button>
+    <div class="sidebar-bottom"><div class="team-avatar">RD</div><div class="team-text"><b>Developer Team</b><small>Private workspace</small></div><button id="logoutBtn" class="icon-btn" title="Keluar">↗</button></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><div class="eyebrow">ROBLOX CREATOR TOOLS</div><h2 id="pageTitle">Overview</h2></div><div class="top-actions"><span class="live-pill"><i></i> Workspace online</span><button id="topUpload" class="primary">＋ Upload asset</button></div></header>
+    <section id="overviewSection" class="section">
+      <div class="hero">
+        <div class="hero-copy"><div class="eyebrow blue">YOUR MAP. YOUR ASSETS.</div><h1>Build faster.<br><span>Ship smarter.</span></h1><p>Kelola Place ID, Music ID, dan upload aset Roblox dari satu workspace yang rapi.</p><button class="primary" id="heroUpload">Mulai upload <span>↗</span></button></div>
+        <div class="hero-art"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="cube">R</div><div class="art-caption"><span class="status-dot"></span> ASSET CONTROL CENTER</div></div>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Saved Places</span><span class="stat-icon">⌘</span></div><strong id="placeCount">0</strong><small>Place ID tersimpan di browser ini</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Music IDs</span><span class="stat-icon">♫</span></div><strong id="musicCount">0</strong><small>Audio ID tersimpan di browser ini</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Upload types</span><span class="stat-icon">↑</span></div><strong>02</strong><small>Model dan audio via Open Cloud</small></article>
+      </div>
+      <div class="content-grid">
+        <article class="panel"><div class="panel-heading"><div><h3>Quick actions</h3><p>Shortcut untuk tugas developer</p></div></div><div class="quick-actions"><button class="quick-card" id="savePlaceShortcut"><span class="quick-icon">⌘</span><b>Simpan Place ID</b><small>Catat map Roblox</small><span class="arrow">↗</span></button><button class="quick-card" id="saveMusicShortcut"><span class="quick-icon">♫</span><b>Simpan Music ID</b><small>Catat audio asset</small><span class="arrow">↗</span></button><button class="quick-card" id="uploadShortcut"><span class="quick-icon">↑</span><b>Upload asset</b><small>Model atau audio</small><span class="arrow">↗</span></button></div></article>
+        <article class="panel note-panel"><div class="note-symbol">✦</div><h3>Creator notes</h3><p>Upload menggunakan Roblox Open Cloud. API key disimpan sebagai environment variable di Netlify, bukan di browser.</p><a href="https://create.roblox.com/docs/cloud/guides/usage-assets" target="_blank" rel="noreferrer">Baca panduan Roblox ↗</a></article>
+      </div>
+    </section>
+    <section id="assetsSection" class="section hidden">
+      <div class="section-intro"><div><h3>Asset Library</h3><p>Daftar ID disimpan lokal pada browser/perangkat ini.</p></div><button class="secondary" id="exportBtn">↓ Export JSON</button></div>
+      <div class="filter-row"><button class="filter active" data-filter="all">Semua</button><button class="filter" data-filter="place">Places</button><button class="filter" data-filter="music">Music</button><div class="search-wrap">⌕ <input id="searchInput" placeholder="Cari nama atau ID..."></div></div>
+      <div id="assetList" class="asset-list"></div>
+      <div id="emptyState" class="empty-state"><div>▧</div><h3>Library masih kosong</h3><p>Simpan Place ID atau Music ID untuk mulai mengisi library.</p></div>
+    </section>
+    <section id="uploadSection" class="section hidden">
+      <div class="section-intro"><div><h3>Upload asset</h3><p>Kirim model atau audio ke Roblox menggunakan Open Cloud Assets API.</p></div><span class="beta-pill">OPEN CLOUD · BETA API</span></div>
+      <div class="upload-layout">
+        <form id="uploadForm" class="panel upload-form">
+          <label for="assetType">Asset type</label><select id="assetType"><option value="Model">Model (.rbxm, .rbxmx, .fbx, .gltf, .glb)</option><option value="Audio">Audio (.mp3, .ogg, .wav, .flac)</option></select>
+          <label for="assetName">Display name</label><input id="assetName" maxlength="50" placeholder="Contoh: City Map Props" required>
+          <label for="assetDescription">Description <span class="optional">opsional</span></label><textarea id="assetDescription" maxlength="1000" placeholder="Deskripsi singkat aset..." rows="3"></textarea>
+          <label class="file-drop" for="assetFile"><span class="file-symbol">↑</span><b id="fileLabel">Pilih file untuk di-upload</b><small id="fileHint">Maksimum 4.5 MB untuk fungsi Netlify ini</small><input id="assetFile" type="file" required accept=".rbxm,.rbxmx,.fbx,.gltf,.glb"></label>
+          <div class="notice"><b>Perlu diketahui</b><p>Aset akan dimiliki creator User/Group yang dikonfigurasi di Netlify. Gunakan hanya file yang kamu miliki haknya. Roblox dapat menerapkan moderasi dan batas upload akun.</p></div>
+          <button id="uploadSubmit" class="primary full" type="submit">Upload ke Roblox <span>↗</span></button><p id="uploadMessage" class="message" aria-live="polite"></p>
+        </form>
+        <aside class="panel requirements"><div class="req-icon">✓</div><h3>Sebelum upload</h3><ul><li>API key Open Cloud aktif</li><li>Izin <code>asset:write</code></li><li>Creator User ID atau Group ID yang benar</li><li>File sesuai format Roblox</li></ul><div class="divider"></div><h4>Roblox limits</h4><p>Assets API saat ini berstatus beta. Batas Roblox mencakup file maksimal 20 MB; dashboard ini membatasi 4.5 MB agar sesuai batas request Netlify Functions.</p><a href="https://create.roblox.com/docs/cloud/guides/usage-assets" target="_blank" rel="noreferrer">Lihat semua ketentuan ↗</a></aside>
+      </div>
+      <div id="uploadResult" class="panel result-panel hidden"></div>
+    </section>
+    <footer>Rayy DevHub <span>•</span> Private Roblox developer workspace <span class="footer-right">Built for your team</span></footer>
+  </main>
+</div>
+<div id="modal" class="modal hidden"><div class="modal-card"><button id="closeModal" class="modal-close">×</button><div class="eyebrow blue">ASSET LIBRARY</div><h3 id="modalTitle">Simpan ID</h3><form id="saveIdForm"><input type="hidden" id="recordType"><label for="recordName">Nama</label><input id="recordName" maxlength="60" placeholder="Contoh: Main City Map" required><label for="recordId">Roblox ID</label><input id="recordId" inputmode="numeric" pattern="[0-9]+" placeholder="Masukkan ID angka" required><label for="recordNotes">Catatan <span class="optional">opsional</span></label><textarea id="recordNotes" rows="2" maxlength="250" placeholder="Catatan singkat..."></textarea><button class="primary full" type="submit">Simpan ke library</button></form></div></div>
+<div id="toast" class="toast"></div>
+<script src="/app.js"></script>
+</body></html>
